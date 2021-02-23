@@ -1,0 +1,47 @@
+﻿
+@{
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Iniciar Sesión</title>
+</head>
+<body>
+    <div class="row">
+        @{ 
+            if (!string.IsNullOrEmpty(ViewBag.Message))
+            { 
+                <div class="alert alert-warning"> ViewBag.Message </div>
+            }
+        }
+        <div class="col-md-8">
+            <img src="~/Content/Images/bus.svg" class="rounded mx-auto d-block" />
+        </div>
+        <div class="col-md-4">
+            <form action="/Home/Login" method="post">
+                <div class="form-group">
+                    <label for="inputEmail">Correo Electrónico</label>
+                    <input type="email" class="form-control col-12" id="inputEmail" aria-describedby="emailHelp" placeholder="Ingresar Correo Electrónico" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">Contraseña</label>
+                    <input type="password" class="form-control col-12" id="inputPassword" placeholder="Ingresar Contraseña" name="password">
+                </div>
+                <div class="form-group">
+                    <label for="sltType"> Tipo</label>
+                    <select class="form-control col-12" id="sltType">
+                        <option value="cliente"> Cliente </option>
+                        <option value="chofer"> Chofer </option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-info col-12 mt-5">Ingresar</button>
+                <label id="lblErrorMessage" class="mt-2"></label>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

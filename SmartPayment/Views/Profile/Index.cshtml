@@ -1,0 +1,109 @@
+﻿@model SmartPayment.Models.CLIENTE
+@{
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Datos Personales</h2>
+
+            <form action="/Home/Login" method="post">
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="inputId">Identificación</label>
+                        <input type="text" class="form-control form-control-sm" id="inputId" name="id" disabled value="@ViewData["id"]">
+                    </div>
+                    <div class="col">
+                        <label for="inputDateOfBirth">Fecha Nacimiento</label>
+                        <input class="form-control col-12 form-control-sm" type="date" id="inputDateOfBirth" name="dateOfBirth" value="@ViewData["dateOfBirth"]">
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="inputName">Nombre</label>
+                        <input type="text" class="form-control form-control-sm" id="inputName" name="name" value="@ViewData["name"]"/>
+                    </div>
+
+                    <div class="col">
+                        <label for="inputLastName">Primer Apellido</label>
+                        <input type="text" class="form-control form-control-sm" id="inputLastName" name="lastName" value="@ViewData["lastName"]">
+                    </div>
+
+                    <div class="col">
+                        <label for="inputSecondLastName">Segundo Apellido</label>
+                        <input type="text" class="form-control form-control-sm" id="inputSecondLastName" name="secondLastName" value="@ViewData["secondLastName"]">
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <label for="inputPaymentMethod">Método de Pago</label>
+                    <input class="form-control col-12 form-control-sm" id="inputPaymentMethod" type="text" name="paymentMethod" value="@ViewData["paymentMethod"]">
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail">Correo Electrónico</label>
+                    <input type="email" class="form-control col-12 form-control-sm" id="inputEmail" name="email" value="@ViewData["email"]">
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="inputPassword">Contraseña</label>
+                        <input type="password" class="form-control  form-control-sm" id="inputPassword" name="password" value="@ViewData["password"]">
+                    </div>
+
+                    <div class="col">
+                        <label for="inputPassword2">Repetir Contraseña</label>
+                        <input type="password" class="form-control form-control-sm" id="inputPassword2" name="password2" value="@ViewData["password2"]">
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn btn-info col-12 mt-5">Editar Información</button>
+                <label id="lblErrorMessage" class="mt-2"></label>
+            </form>
+        </div>
+        <div class="col-md-5 offset-1">
+            <h2>Monedero</h2>
+
+            <div class="text-center">
+                <p class="display-4  mt-5"><span>₡</span>@ViewData["monedero"]</p>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">Recargar Monedero </button>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Monedero</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group text-center">
+                                        <label for="inputAmmountMoney">Monto a Recargar</label>
+                                        <input class="form-control col-6 offset-3" id="inputAmmountMoney" type="number" name="ammount">
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-info">Recargar</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

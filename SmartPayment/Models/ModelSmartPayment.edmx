@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SMART_PAYMENT_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ADMINISTRADOR">
+          <Key>
+            <PropertyRef Name="ADM_IDENTIDAD" />
+          </Key>
+          <Property Name="ADM_IDENTIDAD" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ADM_CORREO_ELECTRONICO" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ADM_CONTRASENNA" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CHOFER">
+          <Key>
+            <PropertyRef Name="CHO_IDENTIFICACION" />
+          </Key>
+          <Property Name="CHO_IDENTIFICACION" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CHO_CORREO_ELECTRONICO" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CHO_CONTRASENNA" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CHO_NOMBRE" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CHO_PRIMER_APELLIDO" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CHO_SEGUNDO_APELLIDO" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CHO_FECHA_NACIMIENTO" Type="date" Nullable="false" />
+          <Property Name="CHO_TIPO" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CLIENTE">
+          <Key>
+            <PropertyRef Name="CLI_IDENTIFICACION" />
+          </Key>
+          <Property Name="CLI_IDENTIFICACION" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CLI_CORREO_ELECTRONICO" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CLI_CONTRASENNA" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CLI_NOMBRE" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CLI_PRIMER_APELLIDO" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CLI_SEGUNDO_APELLIDO" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CLI_FECHA_NACIMIENTO" Type="date" Nullable="false" />
+          <Property Name="CLI_METODO_PAGO" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CLI_MONEDERO" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CLI_TIPO" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PAGO">
+          <Key>
+            <PropertyRef Name="PAG_ID" />
+          </Key>
+          <Property Name="PAG_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PAG_IDENTIFICACION_CLIENTE" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="PAG_IDENTIFICACION_CHOFER" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="PAG_CODIGO_CTP_RUTA" Type="int" Nullable="false" />
+          <Property Name="PAG_FECHA" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="RECHAZADO" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RUTA">
+          <Key>
+            <PropertyRef Name="RUT_CODIGO_CTP" />
+          </Key>
+          <Property Name="RUT_CODIGO_CTP" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RUT_PROVINCIA" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="RUT_CANTON" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="RUT_NOMBRE" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="RUT_COSTO" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_PAGO_CHOFER">
+          <End Role="CHOFER" Type="Self.CHOFER" Multiplicity="1" />
+          <End Role="PAGO" Type="Self.PAGO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CHOFER">
+              <PropertyRef Name="CHO_IDENTIFICACION" />
+            </Principal>
+            <Dependent Role="PAGO">
+              <PropertyRef Name="PAG_IDENTIFICACION_CHOFER" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PAGO_CLIENTE">
+          <End Role="CLIENTE" Type="Self.CLIENTE" Multiplicity="1" />
+          <End Role="PAGO" Type="Self.PAGO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CLIENTE">
+              <PropertyRef Name="CLI_IDENTIFICACION" />
+            </Principal>
+            <Dependent Role="PAGO">
+              <PropertyRef Name="PAG_IDENTIFICACION_CLIENTE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PAGO_RUTA">
+          <End Role="RUTA" Type="Self.RUTA" Multiplicity="1" />
+          <End Role="PAGO" Type="Self.PAGO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RUTA">
+              <PropertyRef Name="RUT_CODIGO_CTP" />
+            </Principal>
+            <Dependent Role="PAGO">
+              <PropertyRef Name="PAG_CODIGO_CTP_RUTA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SMART_PAYMENT_DBModelStoreContainer">
+          <EntitySet Name="ADMINISTRADOR" EntityType="Self.ADMINISTRADOR" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CHOFER" EntityType="Self.CHOFER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CLIENTE" EntityType="Self.CLIENTE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PAGO" EntityType="Self.PAGO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RUTA" EntityType="Self.RUTA" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PAGO_CHOFER" Association="Self.FK_PAGO_CHOFER">
+            <End Role="CHOFER" EntitySet="CHOFER" />
+            <End Role="PAGO" EntitySet="PAGO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PAGO_CLIENTE" Association="Self.FK_PAGO_CLIENTE">
+            <End Role="CLIENTE" EntitySet="CLIENTE" />
+            <End Role="PAGO" EntitySet="PAGO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PAGO_RUTA" Association="Self.FK_PAGO_RUTA">
+            <End Role="RUTA" EntitySet="RUTA" />
+            <End Role="PAGO" EntitySet="PAGO" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SMART_PAYMENT_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ADMINISTRADOR">
+          <Key>
+            <PropertyRef Name="ADM_IDENTIDAD" />
+          </Key>
+          <Property Name="ADM_IDENTIDAD" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ADM_CORREO_ELECTRONICO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ADM_CONTRASENNA" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CHOFER">
+          <Key>
+            <PropertyRef Name="CHO_IDENTIFICACION" />
+          </Key>
+          <Property Name="CHO_IDENTIFICACION" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CHO_CORREO_ELECTRONICO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CHO_CONTRASENNA" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CHO_NOMBRE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CHO_PRIMER_APELLIDO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CHO_SEGUNDO_APELLIDO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CHO_FECHA_NACIMIENTO" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CHO_TIPO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="PAGOes" Relationship="Self.FK_PAGO_CHOFER" FromRole="CHOFER" ToRole="PAGO" />
+        </EntityType>
+        <EntityType Name="CLIENTE">
+          <Key>
+            <PropertyRef Name="CLI_IDENTIFICACION" />
+          </Key>
+          <Property Name="CLI_IDENTIFICACION" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CLI_CORREO_ELECTRONICO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CLI_CONTRASENNA" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CLI_NOMBRE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CLI_PRIMER_APELLIDO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CLI_SEGUNDO_APELLIDO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CLI_FECHA_NACIMIENTO" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CLI_METODO_PAGO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CLI_MONEDERO" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CLI_TIPO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="PAGOes" Relationship="Self.FK_PAGO_CLIENTE" FromRole="CLIENTE" ToRole="PAGO" />
+        </EntityType>
+        <EntityType Name="PAGO">
+          <Key>
+            <PropertyRef Name="PAG_ID" />
+          </Key>
+          <Property Name="PAG_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PAG_IDENTIFICACION_CLIENTE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PAG_IDENTIFICACION_CHOFER" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PAG_CODIGO_CTP_RUTA" Type="Int32" Nullable="false" />
+          <Property Name="PAG_FECHA" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="RECHAZADO" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CHOFER" Relationship="Self.FK_PAGO_CHOFER" FromRole="PAGO" ToRole="CHOFER" />
+          <NavigationProperty Name="CLIENTE" Relationship="Self.FK_PAGO_CLIENTE" FromRole="PAGO" ToRole="CLIENTE" />
+          <NavigationProperty Name="RUTA" Relationship="Self.FK_PAGO_RUTA" FromRole="PAGO" ToRole="RUTA" />
+        </EntityType>
+        <EntityType Name="RUTA">
+          <Key>
+            <PropertyRef Name="RUT_CODIGO_CTP" />
+          </Key>
+          <Property Name="RUT_CODIGO_CTP" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RUT_PROVINCIA" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RUT_CANTON" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RUT_NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RUT_COSTO" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <NavigationProperty Name="PAGOes" Relationship="Self.FK_PAGO_RUTA" FromRole="RUTA" ToRole="PAGO" />
+        </EntityType>
+        <Association Name="FK_PAGO_CHOFER">
+          <End Role="CHOFER" Type="Self.CHOFER" Multiplicity="1" />
+          <End Role="PAGO" Type="Self.PAGO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CHOFER">
+              <PropertyRef Name="CHO_IDENTIFICACION" />
+            </Principal>
+            <Dependent Role="PAGO">
+              <PropertyRef Name="PAG_IDENTIFICACION_CHOFER" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PAGO_CLIENTE">
+          <End Role="CLIENTE" Type="Self.CLIENTE" Multiplicity="1" />
+          <End Role="PAGO" Type="Self.PAGO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CLIENTE">
+              <PropertyRef Name="CLI_IDENTIFICACION" />
+            </Principal>
+            <Dependent Role="PAGO">
+              <PropertyRef Name="PAG_IDENTIFICACION_CLIENTE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PAGO_RUTA">
+          <End Role="RUTA" Type="Self.RUTA" Multiplicity="1" />
+          <End Role="PAGO" Type="Self.PAGO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RUTA">
+              <PropertyRef Name="RUT_CODIGO_CTP" />
+            </Principal>
+            <Dependent Role="PAGO">
+              <PropertyRef Name="PAG_CODIGO_CTP_RUTA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SMART_PAYMENT_DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ADMINISTRADORs" EntityType="Self.ADMINISTRADOR" />
+          <EntitySet Name="CHOFERs" EntityType="Self.CHOFER" />
+          <EntitySet Name="CLIENTEs" EntityType="Self.CLIENTE" />
+          <EntitySet Name="PAGOes" EntityType="Self.PAGO" />
+          <EntitySet Name="RUTAs" EntityType="Self.RUTA" />
+          <AssociationSet Name="FK_PAGO_CHOFER" Association="Self.FK_PAGO_CHOFER">
+            <End Role="CHOFER" EntitySet="CHOFERs" />
+            <End Role="PAGO" EntitySet="PAGOes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PAGO_CLIENTE" Association="Self.FK_PAGO_CLIENTE">
+            <End Role="CLIENTE" EntitySet="CLIENTEs" />
+            <End Role="PAGO" EntitySet="PAGOes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PAGO_RUTA" Association="Self.FK_PAGO_RUTA">
+            <End Role="RUTA" EntitySet="RUTAs" />
+            <End Role="PAGO" EntitySet="PAGOes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SMART_PAYMENT_DBModelStoreContainer" CdmEntityContainer="SMART_PAYMENT_DBEntities">
+          <EntitySetMapping Name="ADMINISTRADORs">
+            <EntityTypeMapping TypeName="SMART_PAYMENT_DBModel.ADMINISTRADOR">
+              <MappingFragment StoreEntitySet="ADMINISTRADOR">
+                <ScalarProperty Name="ADM_IDENTIDAD" ColumnName="ADM_IDENTIDAD" />
+                <ScalarProperty Name="ADM_CORREO_ELECTRONICO" ColumnName="ADM_CORREO_ELECTRONICO" />
+                <ScalarProperty Name="ADM_CONTRASENNA" ColumnName="ADM_CONTRASENNA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CHOFERs">
+            <EntityTypeMapping TypeName="SMART_PAYMENT_DBModel.CHOFER">
+              <MappingFragment StoreEntitySet="CHOFER">
+                <ScalarProperty Name="CHO_IDENTIFICACION" ColumnName="CHO_IDENTIFICACION" />
+                <ScalarProperty Name="CHO_CORREO_ELECTRONICO" ColumnName="CHO_CORREO_ELECTRONICO" />
+                <ScalarProperty Name="CHO_CONTRASENNA" ColumnName="CHO_CONTRASENNA" />
+                <ScalarProperty Name="CHO_NOMBRE" ColumnName="CHO_NOMBRE" />
+                <ScalarProperty Name="CHO_PRIMER_APELLIDO" ColumnName="CHO_PRIMER_APELLIDO" />
+                <ScalarProperty Name="CHO_SEGUNDO_APELLIDO" ColumnName="CHO_SEGUNDO_APELLIDO" />
+                <ScalarProperty Name="CHO_FECHA_NACIMIENTO" ColumnName="CHO_FECHA_NACIMIENTO" />
+                <ScalarProperty Name="CHO_TIPO" ColumnName="CHO_TIPO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CLIENTEs">
+            <EntityTypeMapping TypeName="SMART_PAYMENT_DBModel.CLIENTE">
+              <MappingFragment StoreEntitySet="CLIENTE">
+                <ScalarProperty Name="CLI_IDENTIFICACION" ColumnName="CLI_IDENTIFICACION" />
+                <ScalarProperty Name="CLI_CORREO_ELECTRONICO" ColumnName="CLI_CORREO_ELECTRONICO" />
+                <ScalarProperty Name="CLI_CONTRASENNA" ColumnName="CLI_CONTRASENNA" />
+                <ScalarProperty Name="CLI_NOMBRE" ColumnName="CLI_NOMBRE" />
+                <ScalarProperty Name="CLI_PRIMER_APELLIDO" ColumnName="CLI_PRIMER_APELLIDO" />
+                <ScalarProperty Name="CLI_SEGUNDO_APELLIDO" ColumnName="CLI_SEGUNDO_APELLIDO" />
+                <ScalarProperty Name="CLI_FECHA_NACIMIENTO" ColumnName="CLI_FECHA_NACIMIENTO" />
+                <ScalarProperty Name="CLI_METODO_PAGO" ColumnName="CLI_METODO_PAGO" />
+                <ScalarProperty Name="CLI_MONEDERO" ColumnName="CLI_MONEDERO" />
+                <ScalarProperty Name="CLI_TIPO" ColumnName="CLI_TIPO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PAGOes">
+            <EntityTypeMapping TypeName="SMART_PAYMENT_DBModel.PAGO">
+              <MappingFragment StoreEntitySet="PAGO">
+                <ScalarProperty Name="PAG_ID" ColumnName="PAG_ID" />
+                <ScalarProperty Name="PAG_IDENTIFICACION_CLIENTE" ColumnName="PAG_IDENTIFICACION_CLIENTE" />
+                <ScalarProperty Name="PAG_IDENTIFICACION_CHOFER" ColumnName="PAG_IDENTIFICACION_CHOFER" />
+                <ScalarProperty Name="PAG_CODIGO_CTP_RUTA" ColumnName="PAG_CODIGO_CTP_RUTA" />
+                <ScalarProperty Name="PAG_FECHA" ColumnName="PAG_FECHA" />
+                <ScalarProperty Name="RECHAZADO" ColumnName="RECHAZADO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RUTAs">
+            <EntityTypeMapping TypeName="SMART_PAYMENT_DBModel.RUTA">
+              <MappingFragment StoreEntitySet="RUTA">
+                <ScalarProperty Name="RUT_CODIGO_CTP" ColumnName="RUT_CODIGO_CTP" />
+                <ScalarProperty Name="RUT_PROVINCIA" ColumnName="RUT_PROVINCIA" />
+                <ScalarProperty Name="RUT_CANTON" ColumnName="RUT_CANTON" />
+                <ScalarProperty Name="RUT_NOMBRE" ColumnName="RUT_NOMBRE" />
+                <ScalarProperty Name="RUT_COSTO" ColumnName="RUT_COSTO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
