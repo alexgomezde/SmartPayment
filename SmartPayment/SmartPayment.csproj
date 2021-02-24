@@ -128,6 +128,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Global.asax.cs">
@@ -163,6 +164,8 @@
     <Compile Include="Models\RUTA.cs">
       <DependentUpon>ModelSmartPayment.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\ClientsTableViewModel.cs" />
+    <Compile Include="Models\ViewModels\DriversTableViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -174,7 +177,11 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\admin-bus.svg" />
+    <Content Include="Content\Images\bus-stop.svg" />
     <Content Include="Content\Images\bus.svg" />
+    <Content Include="Content\Images\disabled.svg" />
+    <Content Include="Content\Images\draw.svg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -315,6 +322,10 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Profile\Index.cshtml" />
+    <Content Include="Views\Home\Register.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\Drivers.cshtml" />
+    <Content Include="Views\Admin\Clients.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

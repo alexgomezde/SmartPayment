@@ -9,11 +9,13 @@ namespace SmartPayment.Controllers
 {
     public class ProfileController : Controller
     {
-
+        CLIENTE client = new CLIENTE();
+      
         [Authorize]
         // GET: Profile
         public ActionResult Index()
         {
+
             GetUsername();
             return View();
         }
@@ -22,7 +24,7 @@ namespace SmartPayment.Controllers
         {
             SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
 
-            var client = db.CLIENTEs.FirstOrDefault(x => x.CLI_CORREO_ELECTRONICO == System.Web.HttpContext.Current.User.Identity.Name);
+            client = db.CLIENTEs.FirstOrDefault(x => x.CLI_CORREO_ELECTRONICO == System.Web.HttpContext.Current.User.Identity.Name);
 
 
             string dob = client.CLI_FECHA_NACIMIENTO.ToString("yyyy-MM-dd");
@@ -39,6 +41,23 @@ namespace SmartPayment.Controllers
             ViewData["password2"] = client.CLI_CONTRASENNA;
             ViewData["monedero"] = client.CLI_MONEDERO;
             return View();
+        }
+
+
+        public ActionResult UpdateCoinPurse(decimal ammount) 
+        {
+            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
+
+            client = db.CLIENTEs.FirstOrDefault(x => x.CLI_CORREO_ELECTRONICO == System.Web.HttpContext.Current.User.Identity.Name);
+
+            client.CLI_MONEDERO += ammount;
+
+            db.Entry(client).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+
+            ViewData["monedero"] = client.CLI_MONEDERO;
+
+            return RedirectToAction("Index", "Profile");
         }
     }
 }
