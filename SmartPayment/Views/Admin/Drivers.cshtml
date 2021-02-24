@@ -3,7 +3,19 @@
 
 }
 
-<h2>Choferes</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <a href="/Admin/Drivers" class="btn btn-info col-md-12 btn-lg">CHOFERES</a>
+    </div>
+    <div class="col-md-4">
+        <a href="/Admin/Clients" class="btn btn-outline-info col-md-12 btn-lg">CLIENTES</a>
+    </div>
+    <div class="col-md-4">
+        <a href="/Admin/Drivers" class="btn btn-outline-info col-md-12 btn-lg">RUTAS</a>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-12 table-responsive">
         <h2>@ViewBag.Title</h2>
@@ -37,7 +49,71 @@
                 }
             </tbody>
         </table>
-        <button class="btn btn-info float-right">Agregar Chofer</button>
+        <button class="btn btn-info float-right" data-toggle="modal" data-target="#addDriverModal">Agregar Chofer</button>
+
+        <div class="modal fade" id="addDriverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info">
+                        <h5 class="modal-title text-white" id="exampleModalLabel">Agregar Chofer</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/Admin/AddNewDriver" method="post">
+                            <div class="form-group row">
+                                <div class="col">
+                                    <label for="inputId">Identificación</label>
+                                    <input type="text" class="form-control form-control-sm" id="inputId" name="id" value="@ViewData["id"]">
+                                </div>
+                                <div class="col">
+                                    <label for="inputDateOfBirth">Fecha Nacimiento</label>
+                                    <input class="form-control col-12 form-control-sm" type="date" id="inputDateOfBirth" name="dateOfBirth" value="@ViewData["dateOfBirth"]">
+                                </div>
+
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col">
+                                    <label for="inputName">Nombre</label>
+                                    <input type="text" class="form-control form-control-sm" id="inputName" name="name" value="@ViewData["name"]" />
+                                </div>
+
+                                <div class="col">
+                                    <label for="inputLastName">Primer Apellido</label>
+                                    <input type="text" class="form-control form-control-sm" id="inputLastName" name="lastName" value="@ViewData["lastName"]">
+                                </div>
+
+                                <div class="col">
+                                    <label for="inputSecondLastName">Segundo Apellido</label>
+                                    <input type="text" class="form-control form-control-sm" id="inputSecondLastName" name="secondLastName" value="@ViewData["secondLastName"]">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail">Correo Electrónico</label>
+                                <input type="email" class="form-control col-12 form-control-sm" id="inputEmail" name="email" value="@ViewData["email"]">
+                            </div>
+                            <div class="form-group row">
+                                <div class="col">
+                                    <label for="inputPassword">Contraseña</label>
+                                    <input type="password" class="form-control  form-control-sm" id="inputPassword" name="password" value="@ViewData["password"]">
+                                </div>
+
+                                <div class="col">
+                                    <label for="inputPassword2">Repetir Contraseña</label>
+                                    <input type="password" class="form-control form-control-sm" id="inputPassword2" name="password2" value="@ViewData["password2"]">
+                                </div>
+
+                            </div>
+
+                            <button type="submit" class="btn btn-info col-12 mt-5">Agregar Nuevo Chofer</button>
+                            <label id="lblErrorMessage" class="mt-2 text-danger"></label>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

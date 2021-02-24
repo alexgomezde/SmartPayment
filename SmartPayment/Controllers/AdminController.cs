@@ -57,5 +57,28 @@ namespace SmartPayment.Controllers
             return View(lst);
 
         }
+
+        public ActionResult AddNewDriver(string id, DateTime dateOfBirth, string name, string lastName, string secondLastName, string email, string password, string password2)
+        {
+            var chofer = new CHOFER();
+
+            chofer.CHO_IDENTIFICACION= id;
+            chofer.CHO_FECHA_NACIMIENTO = dateOfBirth;
+            chofer.CHO_NOMBRE = name;
+            chofer.CHO_PRIMER_APELLIDO = lastName;
+            chofer.CHO_SEGUNDO_APELLIDO = secondLastName;
+            chofer.CHO_CORREO_ELECTRONICO = email;
+            chofer.CHO_CONTRASENNA = password;
+            chofer.CHO_TIPO = "chofer";
+
+            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
+
+            db.Entry(chofer).State = System.Data.Entity.EntityState.Added;
+            db.SaveChanges();
+
+           return RedirectToAction("Drivers", "Admin");
+
+      
+        }
     }
 }
