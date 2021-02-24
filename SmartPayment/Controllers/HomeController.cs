@@ -18,59 +18,36 @@ namespace SmartPayment.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(string email, string password, string type)
+        public ActionResult Login(string email, string password )
         {
             SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
 
 
-            if (type.Equals("cliente"))
+            var cliente = db.CLIENTEs.FirstOrDefault(e => e.CLI_CORREO_ELECTRONICO == email && e.CLI_CONTRASENNA == password);
+            var admin = db.ADMINISTRADORs.FirstOrDefault(e => e.ADM_CORREO_ELECTRONICO == email && e.ADM_CONTRASENNA == password);
+            var driver = db.CHOFERs.FirstOrDefault(e => e.CHO_CORREO_ELECTRONICO == email && e.CHO_CONTRASENNA == password);
+
+
+            if (cliente != null)
             {
-                var cliente = db.CLIENTEs.FirstOrDefault(e => e.CLI_CORREO_ELECTRONICO == email && e.CLI_CONTRASENNA == password);
-
-                if (cliente != null)
-                {
-                    FormsAuthentication.SetAuthCookie(cliente.CLI_CORREO_ELECTRONICO, true);
-                    return RedirectToAction("Index", "Profile");
-                }
-                else
-                {
-                    return RedirectToAction("Index", new { message = "Correo electrónico y/o contraseña" });
-                }
-
+                FormsAuthentication.SetAuthCookie(cliente.CLI_CORREO_ELECTRONICO, true);
+                return RedirectToAction("Index", "Profile");
             }
-            else if (type.Equals("chofer"))
+            else if (admin != null)
             {
-                var chofer = db.CHOFERs.FirstOrDefault(e => e.CHO_CORREO_ELECTRONICO == email && e.CHO_CONTRASENNA == password);
+                FormsAuthentication.SetAuthCookie(admin.ADM_CORREO_ELECTRONICO, true);
+                return RedirectToAction("Index", "Admin");
 
-                if (chofer != null)
-                {
-                    FormsAuthentication.SetAuthCookie(chofer.CHO_CORREO_ELECTRONICO, true);
-                    return RedirectToAction("Index", "Profile");
-                }
-                else
-                {
-                    return RedirectToAction("Index", new { message = "Correo electrónico y/o contraseña" });
-                }
             }
-            else if (type.Equals("admin")) {
-
-                var admin = db.ADMINISTRADORs.FirstOrDefault(e => e.ADM_CORREO_ELECTRONICO == email && e.ADM_CONTRASENNA == password);
-
-
-                if (admin != null)
-                {
-                    FormsAuthentication.SetAuthCookie(admin.ADM_CORREO_ELECTRONICO, true);
-                    return RedirectToAction("Index", "Admin");
-                }
-                else
-                {
-                    return RedirectToAction("Index", new { message = "Correo electrónico y/o contraseña" });
-                }
+            else if (driver != null)
+            {
+                FormsAuthentication.SetAuthCookie(driver.CHO_CORREO_ELECTRONICO, true);
+                return RedirectToAction("Index", "Admin");
             }
+            else {
 
-
-            return RedirectToAction("Index", new { message = "Correo electrónico y/o contraseña" });
-
+                return RedirectToAction("Index", new { message = "Correo electrónico y/o contraseña inválidos" });
+            }
 
         }
 

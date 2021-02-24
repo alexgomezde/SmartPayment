@@ -10,6 +10,7 @@ namespace SmartPayment.Controllers
 {
     public class AdminController : Controller
     {
+        [Authorize]
         // GET: Admin
         public ActionResult Index()
         {
