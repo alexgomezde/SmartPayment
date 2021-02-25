@@ -29,7 +29,7 @@ namespace SmartPayment.Models
         public System.DateTime CLI_FECHA_NACIMIENTO { get; set; }
         public string CLI_METODO_PAGO { get; set; }
         public decimal CLI_MONEDERO { get; set; }
-        public string CLI_TIPO { get; set; }
+        public bool CLI_ESTADO { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PAGO> PAGOes { get; set; }

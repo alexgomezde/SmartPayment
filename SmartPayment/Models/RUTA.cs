@@ -25,6 +25,7 @@ namespace SmartPayment.Models
         public string RUT_CANTON { get; set; }
         public string RUT_NOMBRE { get; set; }
         public decimal RUT_COSTO { get; set; }
+        public bool RUT_ESTADO { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PAGO> PAGOes { get; set; }

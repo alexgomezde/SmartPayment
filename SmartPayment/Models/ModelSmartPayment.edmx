@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SMART_PAYMENT_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SMART_PAYMENT_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ADMINISTRADOR">
           <Key>
             <PropertyRef Name="ADM_IDENTIDAD" />
@@ -24,7 +24,7 @@
           <Property Name="CHO_PRIMER_APELLIDO" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="CHO_SEGUNDO_APELLIDO" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="CHO_FECHA_NACIMIENTO" Type="date" Nullable="false" />
-          <Property Name="CHO_TIPO" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CHO_ESTADO" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CLIENTE">
           <Key>
@@ -39,7 +39,7 @@
           <Property Name="CLI_FECHA_NACIMIENTO" Type="date" Nullable="false" />
           <Property Name="CLI_METODO_PAGO" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CLI_MONEDERO" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="CLI_TIPO" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CLI_ESTADO" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="PAGO">
           <Key>
@@ -61,6 +61,7 @@
           <Property Name="RUT_CANTON" Type="nvarchar" MaxLength="30" Nullable="false" />
           <Property Name="RUT_NOMBRE" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="RUT_COSTO" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="RUT_ESTADO" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_PAGO_CHOFER">
           <End Role="CHOFER" Type="Self.CHOFER" Multiplicity="1" />
@@ -117,8 +118,7 @@
             <End Role="PAGO" EntitySet="PAGO" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SMART_PAYMENT_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -141,8 +141,8 @@
           <Property Name="CHO_PRIMER_APELLIDO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CHO_SEGUNDO_APELLIDO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CHO_FECHA_NACIMIENTO" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="CHO_TIPO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="PAGOes" Relationship="Self.FK_PAGO_CHOFER" FromRole="CHOFER" ToRole="PAGO" />
+          <Property Name="CHO_ESTADO" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="CLIENTE">
           <Key>
@@ -157,8 +157,8 @@
           <Property Name="CLI_FECHA_NACIMIENTO" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="CLI_METODO_PAGO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CLI_MONEDERO" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="CLI_TIPO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="PAGOes" Relationship="Self.FK_PAGO_CLIENTE" FromRole="CLIENTE" ToRole="PAGO" />
+          <Property Name="CLI_ESTADO" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="PAGO">
           <Key>
@@ -184,6 +184,7 @@
           <Property Name="RUT_NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="RUT_COSTO" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <NavigationProperty Name="PAGOes" Relationship="Self.FK_PAGO_RUTA" FromRole="RUTA" ToRole="PAGO" />
+          <Property Name="RUT_ESTADO" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_PAGO_CHOFER">
           <End Role="CHOFER" Type="Self.CHOFER" Multiplicity="1" />
@@ -258,6 +259,7 @@
           <EntitySetMapping Name="CHOFERs">
             <EntityTypeMapping TypeName="SMART_PAYMENT_DBModel.CHOFER">
               <MappingFragment StoreEntitySet="CHOFER">
+                <ScalarProperty Name="CHO_ESTADO" ColumnName="CHO_ESTADO" />
                 <ScalarProperty Name="CHO_IDENTIFICACION" ColumnName="CHO_IDENTIFICACION" />
                 <ScalarProperty Name="CHO_CORREO_ELECTRONICO" ColumnName="CHO_CORREO_ELECTRONICO" />
                 <ScalarProperty Name="CHO_CONTRASENNA" ColumnName="CHO_CONTRASENNA" />
@@ -265,13 +267,13 @@
                 <ScalarProperty Name="CHO_PRIMER_APELLIDO" ColumnName="CHO_PRIMER_APELLIDO" />
                 <ScalarProperty Name="CHO_SEGUNDO_APELLIDO" ColumnName="CHO_SEGUNDO_APELLIDO" />
                 <ScalarProperty Name="CHO_FECHA_NACIMIENTO" ColumnName="CHO_FECHA_NACIMIENTO" />
-                <ScalarProperty Name="CHO_TIPO" ColumnName="CHO_TIPO" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CLIENTEs">
             <EntityTypeMapping TypeName="SMART_PAYMENT_DBModel.CLIENTE">
               <MappingFragment StoreEntitySet="CLIENTE">
+                <ScalarProperty Name="CLI_ESTADO" ColumnName="CLI_ESTADO" />
                 <ScalarProperty Name="CLI_IDENTIFICACION" ColumnName="CLI_IDENTIFICACION" />
                 <ScalarProperty Name="CLI_CORREO_ELECTRONICO" ColumnName="CLI_CORREO_ELECTRONICO" />
                 <ScalarProperty Name="CLI_CONTRASENNA" ColumnName="CLI_CONTRASENNA" />
@@ -281,7 +283,6 @@
                 <ScalarProperty Name="CLI_FECHA_NACIMIENTO" ColumnName="CLI_FECHA_NACIMIENTO" />
                 <ScalarProperty Name="CLI_METODO_PAGO" ColumnName="CLI_METODO_PAGO" />
                 <ScalarProperty Name="CLI_MONEDERO" ColumnName="CLI_MONEDERO" />
-                <ScalarProperty Name="CLI_TIPO" ColumnName="CLI_TIPO" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -300,6 +301,7 @@
           <EntitySetMapping Name="RUTAs">
             <EntityTypeMapping TypeName="SMART_PAYMENT_DBModel.RUTA">
               <MappingFragment StoreEntitySet="RUTA">
+                <ScalarProperty Name="RUT_ESTADO" ColumnName="RUT_ESTADO" />
                 <ScalarProperty Name="RUT_CODIGO_CTP" ColumnName="RUT_CODIGO_CTP" />
                 <ScalarProperty Name="RUT_PROVINCIA" ColumnName="RUT_PROVINCIA" />
                 <ScalarProperty Name="RUT_CANTON" ColumnName="RUT_CANTON" />

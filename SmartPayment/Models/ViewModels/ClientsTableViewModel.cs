@@ -12,6 +12,7 @@ namespace SmartPayment.Models.ViewModels
         public string Name { get; set; }
         public string Lastname { get; set; }
         public string SecondLastname { get; set; }
+        public bool State { get; set; }
         public DateTime DateOfBirth { get; set; }
     }
 }

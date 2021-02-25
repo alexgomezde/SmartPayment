@@ -27,7 +27,7 @@ namespace SmartPayment.Models
         public string CHO_PRIMER_APELLIDO { get; set; }
         public string CHO_SEGUNDO_APELLIDO { get; set; }
         public System.DateTime CHO_FECHA_NACIMIENTO { get; set; }
-        public string CHO_TIPO { get; set; }
+        public bool CHO_ESTADO { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PAGO> PAGOes { get; set; }

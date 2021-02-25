@@ -30,19 +30,38 @@ namespace SmartPayment.Controllers
 
             if (cliente != null)
             {
-                FormsAuthentication.SetAuthCookie(cliente.CLI_CORREO_ELECTRONICO, true);
-                return RedirectToAction("Index", "Profile");
+                if (cliente.CLI_ESTADO == true)
+                {
+                    FormsAuthentication.SetAuthCookie(cliente.CLI_CORREO_ELECTRONICO, true);
+                    return RedirectToAction("Index", "Profile");
+                }
+                else {
+
+                    return RedirectToAction("Index", new { message = "Cuenta deshabilitada. Por favor contactar al administrador" });
+                }
+                
             }
             else if (admin != null)
             {
+             
                 FormsAuthentication.SetAuthCookie(admin.ADM_CORREO_ELECTRONICO, true);
                 return RedirectToAction("Index", "Admin");
 
             }
             else if (driver != null)
             {
-                FormsAuthentication.SetAuthCookie(driver.CHO_CORREO_ELECTRONICO, true);
-                return RedirectToAction("Index", "Admin");
+
+                if (driver.CHO_ESTADO == true)
+                {
+                    FormsAuthentication.SetAuthCookie(driver.CHO_CORREO_ELECTRONICO, true);
+                    return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+
+                    return RedirectToAction("Index", new { message = "Cuenta deshabilitada. Por favor contactar al administrador" });
+                }
+
             }
             else {
 
@@ -94,7 +113,7 @@ namespace SmartPayment.Controllers
             client.CLI_CORREO_ELECTRONICO = email;
             client.CLI_CONTRASENNA = password;
             client.CLI_MONEDERO = 0;
-            client.CLI_TIPO = "cliente";
+            client.CLI_ESTADO = true;
 
             SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
 

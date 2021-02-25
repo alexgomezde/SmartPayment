@@ -30,7 +30,7 @@ namespace SmartPayment.Controllers
                            Name = d.CHO_NOMBRE,
                            Lastname = d.CHO_PRIMER_APELLIDO,
                            SecondLastname = d.CHO_SEGUNDO_APELLIDO,
-                           DateOfBirth = d.CHO_FECHA_NACIMIENTO
+                           State = d.CHO_ESTADO
                        }).ToList();
 
             }
@@ -51,7 +51,7 @@ namespace SmartPayment.Controllers
                            Name = d.CLI_NOMBRE,
                            Lastname = d.CLI_PRIMER_APELLIDO,
                            SecondLastname = d.CLI_SEGUNDO_APELLIDO,
-                           DateOfBirth = d.CLI_FECHA_NACIMIENTO
+                           State = d.CLI_ESTADO
                        }).ToList();
 
             }
@@ -70,7 +70,7 @@ namespace SmartPayment.Controllers
             chofer.CHO_SEGUNDO_APELLIDO = secondLastName;
             chofer.CHO_CORREO_ELECTRONICO = email;
             chofer.CHO_CONTRASENNA = password;
-            chofer.CHO_TIPO = "chofer";
+            chofer.CHO_ESTADO = true;
 
             SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
 
@@ -80,6 +80,52 @@ namespace SmartPayment.Controllers
            return RedirectToAction("Drivers", "Admin");
 
       
+        }
+
+        public ActionResult DisableClient(string id)
+        {
+
+            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
+
+            var client = db.CLIENTEs.FirstOrDefault(x => x.CLI_IDENTIFICACION == id);
+
+
+            if (client.CLI_ESTADO == true)
+            {
+                client.CLI_ESTADO = false;
+            }
+            else {
+                client.CLI_ESTADO = true;
+            }
+
+            db.Entry(client).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("Clients", "Admin");
+
+        }
+
+        public ActionResult DisableDriver(string id)
+        {
+            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
+
+            var driver = db.CHOFERs.FirstOrDefault(x => x.CHO_IDENTIFICACION == id);
+
+
+            if (driver.CHO_ESTADO == true)
+            {
+                driver.CHO_ESTADO = false;
+            }
+            else
+            {
+                driver.CHO_ESTADO = true;
+            }
+
+            db.Entry(driver).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("Drivers", "Admin");
+
         }
     }
 }

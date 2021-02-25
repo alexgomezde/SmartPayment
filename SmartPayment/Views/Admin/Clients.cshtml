@@ -1,7 +1,9 @@
 ﻿@model List<SmartPayment.Models.ViewModels.ClientsTableViewModel>
 @{
     ViewBag.Title = "Clientes";
+
 }
+
 
 <!DOCTYPE html>
 
@@ -26,14 +28,14 @@
         <div class="col-md-12 table-responsive">
             <table class="table  table-striped table-hover">
                 <thead class="thead-dark">
-                    <tr>
+                    <tr class="text-center">
                         <th>Identificación</th>
                         <th>Correo Electrónico</th>
                         <th>Nombre</th>
                         <th>Primer Apellido</th>
                         <th>Segundo Apellido</th>
-                        <th>Fecha de Nacimiento</th>
-                        <th>Deshabilitar</th>
+                        <th>Estado</th>
+                        <th>Habilitar / Deshabilitar</th>
                     </tr>
 
                 </thead>
@@ -46,14 +48,14 @@
                             <td>@elemento.Name</td>
                             <td>@elemento.Lastname</td>
                             <td>@elemento.SecondLastname</td>
-                            <td>@elemento.Email</td>
-                            <td><a href=""><img src="~/Content/Images/disabled.svg" /></a></td>
+                            <td>@(elemento.State ? "Activo" : "Desactivado")</td>
+                            <td><a href="@Url.Action("DisableClient","Admin", new { id = @elemento.Id })"><img src="~/Content/Images/disabled.svg" /></a></td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
-
+   
     </div>
 </body>
 </html>
