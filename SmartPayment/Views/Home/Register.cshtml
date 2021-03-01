@@ -22,11 +22,11 @@
                 <div class="form-group row">
                     <div class="col">
                         <label for="inputId">Identificación</label>
-                        <input type="text" class="form-control form-control-sm" id="inputId" name="id" value="@ViewData["id"]">
+                        <input type="number" class="form-control form-control-sm" id="inputId" name="id" value="@ViewData["id"]">
                     </div>
                     <div class="col">
                         <label for="inputDateOfBirth">Fecha Nacimiento</label>
-                        <input class="form-control col-12 form-control-sm" type="date" id="inputDateOfBirth" name="dateOfBirth" value="@ViewData["dateOfBirth"]">
+                        <input class="form-control col-12 form-control-sm" type="date" id="inputDateOfBirth" name="dateOfBirth" value="@DateTime.Now.ToString("yyyy-MM-dd").Replace(' ','T')">
                     </div>
 
                 </div>
@@ -50,7 +50,7 @@
 
                 <div class="form-group ">
                     <label for="inputPaymentMethod">Método de Pago</label>
-                    <input class="form-control col-12 form-control-sm" id="inputPaymentMethod" type="text" name="paymentMethod" value="@ViewData["paymentMethod"]">
+                    <input class="form-control col-12 form-control-sm" id="inputPaymentMethod" type="number" name="paymentMethod" value="@ViewData["paymentMethod"]">
                 </div>
                 <div class="form-group">
                     <label for="inputEmail">Correo Electrónico</label>
@@ -67,10 +67,18 @@
                         <input type="password" class="form-control form-control-sm" id="inputPassword2" name="password2" value="@ViewData["password2"]">
                     </div>
 
-                </div>
+                    <div class=" mt-2 text-center col-12"> @ViewData["lblErrorMessage"]</div>
 
-                <button type="submit" class="btn btn-info col-12 mt-5">Registrarse</button>
-                <label id="lblErrorMessage" class="mt-2"></label>
+                </div>
+                @{
+                    if (!string.IsNullOrEmpty(ViewBag.Message))
+                    {
+                        <div class="alert alert-danger mt-2 text-center"> @ViewBag.Message </div>
+                    }
+                }
+
+                <button type="submit" class="btn btn-info col-12 mt-2">Registrarse</button>
+
             </form>
         </div>
         

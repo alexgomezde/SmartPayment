@@ -36,20 +36,27 @@
             <tbody>
                 @foreach (var elemento in Model)
                 {
-                <tr class="text-center">
-                    <td>@elemento.Id</td>
-                    <td>@elemento.Email</td>
-                    <td>@elemento.Name</td>
-                    <td>@elemento.Lastname</td>
-                    <td>@elemento.SecondLastname</td>
-                    <td>@(elemento.State ? "Activo" : "Desactivado")</td>
-                    <td><a href=""><img src="~/Content/Images/draw.svg" /></a></td>
-                    <td><a href="@Url.Action("DisableDriver","Admin", new { id = @elemento.Id })"><img src="~/Content/Images/disabled.svg" /></a></td>
-                </tr>
+                    <tr class="text-center">
+                        <td>@elemento.Id</td>
+                        <td>@elemento.Email</td>
+                        <td>@elemento.Name</td>
+                        <td>@elemento.Lastname</td>
+                        <td>@elemento.SecondLastname</td>
+                        <td>@(elemento.State ? "Activo" : "Desactivado")</td>
+                        <td><a href=""><img src="~/Content/Images/draw.svg" /></a></td>
+                        <td><a href="@Url.Action("DisableDriver","Admin", new { id = @elemento.Id })"><img src="~/Content/Images/disabled.svg" /></a></td>
+                    </tr>
                 }
             </tbody>
         </table>
         <button class="btn btn-info float-right" data-toggle="modal" data-target="#addDriverModal">Agregar Chofer</button>
+
+        @{
+            if (!string.IsNullOrEmpty(ViewBag.Message))
+            {
+                <div class="alert alert-danger mt-2 text-center col-6"> @ViewBag.Message </div>
+            }
+        }
 
         <div class="modal fade" id="addDriverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -69,7 +76,7 @@
                                 </div>
                                 <div class="col">
                                     <label for="inputDateOfBirth">Fecha Nacimiento</label>
-                                    <input class="form-control col-12 form-control-sm" type="date" id="inputDateOfBirth" name="dateOfBirth" value="@ViewData["dateOfBirth"]">
+                                    <input class="form-control col-12 form-control-sm" type="date" id="inputDateOfBirth" name="dateOfBirth" value="@DateTime.Now.ToString("yyyy-MM-dd").Replace(' ','T')">
                                 </div>
 
                             </div>

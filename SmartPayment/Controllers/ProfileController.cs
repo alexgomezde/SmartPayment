@@ -13,9 +13,9 @@ namespace SmartPayment.Controllers
       
         [Authorize]
         // GET: Profile
-        public ActionResult Index()
+        public ActionResult Index(string message = "")
         {
-
+            ViewBag.Message = message;
             GetUsername();
             return View();
         }
@@ -46,18 +46,30 @@ namespace SmartPayment.Controllers
 
         public ActionResult UpdateCoinPurse(decimal ammount) 
         {
-            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
 
-            client = db.CLIENTEs.FirstOrDefault(x => x.CLI_CORREO_ELECTRONICO == System.Web.HttpContext.Current.User.Identity.Name);
+            if(ammount > 0 )
+            {
+                SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
 
-            client.CLI_MONEDERO += ammount;
+                client = db.CLIENTEs.FirstOrDefault(x => x.CLI_CORREO_ELECTRONICO == System.Web.HttpContext.Current.User.Identity.Name);
 
-            db.Entry(client).State = System.Data.Entity.EntityState.Modified;
-            db.SaveChanges();
+                client.CLI_MONEDERO += ammount;
 
-            ViewData["monedero"] = client.CLI_MONEDERO;
+                db.Entry(client).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
 
-            return RedirectToAction("Index", "Profile");
+                ViewData["monedero"] = client.CLI_MONEDERO;
+
+                return RedirectToAction("Index", "Profile");
+
+            } else
+            {
+
+                return RedirectToAction("Index", "Profile", new { message = "Debe ingresar un monto mayor a 0" });
+            }
+            
+
+            
         }
     }
 }

@@ -12,12 +12,7 @@
 </head>
 <body>
     <div class="row">
-        @{ 
-            if (!string.IsNullOrEmpty(ViewBag.Message))
-            { 
-                <div class="alert alert-warning"> ViewBag.Message </div>
-            }
-        }
+        
         <div class="col-md-8">
             <img src="~/Content/Images/bus.svg" class="rounded mx-auto d-block" />
         </div>
@@ -25,15 +20,21 @@
             <form action="/Home/Login" method="post">
                 <div class="form-group">
                     <label for="inputEmail">Correo Electrónico</label>
-                    <input type="email" class="form-control col-12" id="inputEmail" aria-describedby="emailHelp" placeholder="Ingresar Correo Electrónico" name="email">
+                    <input type="text" class="form-control col-12" id="inputEmail" placeholder="Ingresar Correo Electrónico" name="email">
                 </div>
                 <div class="form-group">
                     <label for="inputPassword">Contraseña</label>
                     <input type="password" class="form-control col-12" id="inputPassword" placeholder="Ingresar Contraseña" name="password">
                 </div>
-                <button type="submit" class="btn btn-info col-12 mt-5">Ingresar</button>
+                <button type="submit" class="btn btn-info col-12 mt-2">Ingresar</button>
                 <a type="button" class="btn btn-link col-12" href="@Url.Action("Register", "Home")">¿No tiene cuenta? Registrarse aquí</a>
-                <label id="lblErrorMessage" class="mt-2"></label>
+
+                @{
+                    if (!string.IsNullOrEmpty(ViewBag.Message))
+                    {
+                        <div class="alert alert-danger mt-5 text-center"> @ViewBag.Message </div>
+                    }
+                }
 
             </form>
         </div>

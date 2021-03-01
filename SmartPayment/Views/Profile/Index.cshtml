@@ -77,6 +77,12 @@
             <div class="text-center">
                 <p class="display-4  mt-5"><span>₡</span>@ViewData["monedero"]</p>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">Recargar Monedero </button>
+                @{
+                    if (!string.IsNullOrEmpty(ViewBag.Message))
+                    {
+                        <div class="alert alert-danger mt-2 text-center"> @ViewBag.Message </div>
+                    }
+                }
 
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">

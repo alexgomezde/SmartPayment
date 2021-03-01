@@ -17,8 +17,9 @@ namespace SmartPayment.Controllers
             return View();
         }
 
-        public ActionResult Drivers()
+        public ActionResult Drivers(string message = "")
         {
+            ViewBag.Message = message;
             List<DriversTableViewModel> lst;
             using (SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities())
             {
@@ -61,6 +62,14 @@ namespace SmartPayment.Controllers
 
         public ActionResult AddNewDriver(string id, DateTime dateOfBirth, string name, string lastName, string secondLastName, string email, string password, string password2)
         {
+
+            if (string.IsNullOrEmpty(id) || dateOfBirth == null || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(secondLastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(password2))
+            {
+
+                return RedirectToAction("Drivers", "Admin", new { message = "Campos vacíos" });
+            }
+
+
             var chofer = new CHOFER();
 
             chofer.CHO_IDENTIFICACION= id;
