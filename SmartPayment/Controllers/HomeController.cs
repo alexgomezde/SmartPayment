@@ -11,9 +11,10 @@ namespace SmartPayment.Controllers
 {
     public class HomeController : Controller
     {
-        
-        public ActionResult Index(string message = "")
+      
+        public ActionResult Index(string message = "", string email ="")
         {
+            ViewData["inputEmail"] = email;
             ViewBag.Message = message;
             return View();
         }
@@ -26,13 +27,13 @@ namespace SmartPayment.Controllers
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
                 validForm = false;
-                return RedirectToAction("Index", new { message = "Espacios en blanco" });
+                return RedirectToAction("Index", new { message = "Campos en blanco", email = email});
 
             }
-            else if (!IsValidEmailAddress(email)) 
+            else if (!IsValidEmailAddress(email.Trim())) 
             {
                 validForm = false;
-                return RedirectToAction("Index", new { message = "Debe ingresar un correo electrónico válido" });
+                return RedirectToAction("Index",  new { message = "Debe ingresar un correo electrónico válido", email = email});
             }
 
 
@@ -40,9 +41,9 @@ namespace SmartPayment.Controllers
             {
                 SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
 
-                var cliente = db.CLIENTEs.FirstOrDefault(e => e.CLI_CORREO_ELECTRONICO == email && e.CLI_CONTRASENNA == password);
-                var admin = db.ADMINISTRADORs.FirstOrDefault(e => e.ADM_CORREO_ELECTRONICO == email && e.ADM_CONTRASENNA == password);
-                var driver = db.CHOFERs.FirstOrDefault(e => e.CHO_CORREO_ELECTRONICO == email && e.CHO_CONTRASENNA == password);
+                var cliente = db.CLIENTEs.FirstOrDefault(e => e.CLI_CORREO_ELECTRONICO == email.Trim() && e.CLI_CONTRASENNA == password.Trim());
+                var admin = db.ADMINISTRADORs.FirstOrDefault(e => e.ADM_CORREO_ELECTRONICO == email.Trim() && e.ADM_CONTRASENNA == password.Trim());
+                var driver = db.CHOFERs.FirstOrDefault(e => e.CHO_CORREO_ELECTRONICO == email.Trim() && e.CHO_CONTRASENNA == password.Trim());
 
 
                 if (cliente != null)
@@ -55,7 +56,7 @@ namespace SmartPayment.Controllers
                     else
                     {
 
-                        return RedirectToAction("Index", new { message = "Cuenta deshabilitada. Por favor contactar al administrador" });
+                        return RedirectToAction("Index", new { message = "Cuenta deshabilitada. Por favor contactar al administrador", email = email });
                     }
 
                 }
@@ -77,14 +78,14 @@ namespace SmartPayment.Controllers
                     else
                     {
 
-                        return RedirectToAction("Index", new { message = "Cuenta deshabilitada. Por favor contactar al administrador" });
+                        return RedirectToAction("Index", new { message = "Cuenta deshabilitada. Por favor contactar al administrador", email = email});
                     }
 
                 }
                 else
                 {
 
-                    return RedirectToAction("Index", new { message = "Correo electrónico y/o contraseña inválidos" });
+                    return RedirectToAction("Index", new { message = "Correo electrónico y/o contraseña inválidos", email = email});
                 }
 
             }
@@ -118,8 +119,17 @@ namespace SmartPayment.Controllers
             return View();
         }
 
-        public ActionResult Register(string message = "")
+        public ActionResult Register(string message = "", string id = "", string name = "", string lastName = "", string secondLastName = "", string paymentMethod = "", string email = "", string password = "", string password2 = "")
         {
+            ViewData["id"] = id;
+            ViewData["name"] = name;
+            ViewData["lastName"] = lastName;
+            ViewData["secondLastName"] = secondLastName;
+            ViewData["paymentMethod"] = paymentMethod;
+            ViewData["email"] = email;
+            ViewData["password"] = password;
+            ViewData["password2"] = password2;
+
             ViewBag.Message = message;
             return View();
         }
@@ -132,69 +142,70 @@ namespace SmartPayment.Controllers
             if (string.IsNullOrEmpty(id) || dateOfBirth == null || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(secondLastName) || string.IsNullOrEmpty(paymentMethod) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(password2))
             {
                 validForm = false;
-                ViewData["lblErrorMessage"] = "Espacios vacíos";
-                //return Redirect(Request.Url.AbsoluteUri);
-                return RedirectToAction("Register", new { message = "Campos vacíos" });
+                return RedirectToAction("Register", new { message = "Campos vacíos", id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2});
             }
 
-
-
-            if (!IsValidEmailAddress(email.Trim()))
+            if(dateOfBirth > DateTime.Today)
             {
                 validForm = false;
-                //ViewData["lblErrorMessage"] = "Correo Incorrecto";
-                return RedirectToAction("Register", new { message = "Correo electrónico inválido" });
+                return RedirectToAction("Register", new { message = "La fecha de nacimiento no puede ser mayor a la fecha actual", id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2 });
             }
 
             if (Int32.Parse(id) <= 0)
             {
                 validForm = false;
-                return RedirectToAction("Register", new { message = "El número de identificación debe ser mayor a 0" });
+                return RedirectToAction("Register", new { message = "El número de identificación debe ser mayor a 0", id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2 });
             }
 
             if (Int32.Parse(paymentMethod) <= 0)
             {
                 validForm = false;
-                return RedirectToAction("Register", new { message = "El método de pago debe ser mayor a 0" });
+                return RedirectToAction("Register", new { message = "El método de pago debe ser mayor a 0", id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2 });
             }
 
+            if (!IsValidEmailAddress(email.Trim()))
+            {
+                validForm = false;
+                return RedirectToAction("Register", new { message = "Correo electrónico inválido", id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2 });
+            }
 
+            
             if (string.Equals(password.Trim(), password2.Trim()))
             {
 
                 if (password.Trim().Length < 8)
                 {
                     validForm = false;
-                    return RedirectToAction("Register", new { message = "La longitud de la contraseña debe ser mayor o igual 8" });
+                    return RedirectToAction("Register", new { message = "La longitud de la contraseña debe ser mayor o igual 8", id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2 });
 
                 }
                 else if (!IsValidPassword(password.Trim()))
                 {
                     validForm = false;
-                    return RedirectToAction("Register", new { message = "La contraseña debe contener números y letras" });
+                    return RedirectToAction("Register", new { message = "La contraseña debe contener números y letras", id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2 });
                 }
 
             }
             else
             {
                 validForm = false;
-                return RedirectToAction("Register", new { message = "Contraseñas no coinciden" });
+                return RedirectToAction("Register", new { message = "Contraseñas no coinciden", id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2 });
 
+            }
+
+            if (IsRegisteredID(id.Trim()))
+            {
+                validForm = false;
+                return RedirectToAction("Register", new { message = "Identificación ya se encuentra registrada", id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2 });
             }
 
 
             if (IsRegisteredEmail(email.Trim()))
             {
                 validForm = false;
-                return RedirectToAction("Register", new { message = "Correo electrónico ya está registrado" });
+                return RedirectToAction("Register", new { message = "Correo electrónico ya está registrado", id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2 });
             }
 
-
-            if (IsRegisteredID(id.Trim()))
-            {
-                validForm = false;
-                return RedirectToAction("Register", new { message = "Identificación ya se encuentra registrada" });
-            }
 
             if (validForm)
             {
@@ -221,7 +232,7 @@ namespace SmartPayment.Controllers
             }
             else
             {
-                return RedirectToAction("Register", new { message = "Nada" });
+                return RedirectToAction("Register", new { id = id, name = name, lastName = lastName, secondLastName = secondLastName, paymentMethod = paymentMethod, email = email, password = password, password2 = password2 });
             }
             
 
@@ -265,6 +276,7 @@ namespace SmartPayment.Controllers
             return (cliente != null) ? true : false;
 
         }
+
 
     }
 }

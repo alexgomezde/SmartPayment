@@ -3,8 +3,10 @@ using SmartPayment.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace SmartPayment.Controllers
 {
@@ -17,8 +19,17 @@ namespace SmartPayment.Controllers
             return View();
         }
 
-        public ActionResult Drivers(string message = "")
+        public ActionResult Drivers(string message = "", string id = "", string name = "", string lastName = "", string secondLastName = "", string email = "", string password = "", string password2 = "")
         {
+                //ScriptManager.RegisterStartupScript(Page, Page.GetType(), "myModal", "$('#myModal').modal();", true);
+
+            ViewData["id"] = id;
+            ViewData["name"] = name;
+            ViewData["lastName"] = lastName;
+            ViewData["secondLastName"] = secondLastName;
+            ViewData["email"] = email;
+            ViewData["password"] = password;
+            ViewData["password2"] = password2;
             ViewBag.Message = message;
             List<DriversTableViewModel> lst;
             using (SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities())
@@ -66,19 +77,64 @@ namespace SmartPayment.Controllers
             if (string.IsNullOrEmpty(id) || dateOfBirth == null || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(secondLastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(password2))
             {
 
-                return RedirectToAction("Drivers", "Admin", new { message = "Campos vacíos" });
+                return RedirectToAction("Drivers", "Admin", new { message = "Campos vacíos", id = id, name = name, lastName = lastName, secondLastName = secondLastName, email = email, password = password, password2 = password2 });
+            }
+
+            if (dateOfBirth > DateTime.Today)
+            {
+               
+                return RedirectToAction("Drivers", "Admin", new { message = "La fecha de nacimiento no puede ser mayor a la fecha actual", id = id, name = name, lastName = lastName, secondLastName = secondLastName, email = email, password = password, password2 = password2 });
+            }
+
+            if (Int32.Parse(id) <= 0)
+            {
+                return RedirectToAction("Drivers", "Admin", new { message = "El número de identificación debe ser mayor a 0", id = id, name = name, lastName = lastName, secondLastName = secondLastName, email = email, password = password, password2 = password2 });
+            }
+
+            if (!IsValidEmailAddress(email.Trim()))
+            {
+                return RedirectToAction("Drivers", "Admin", new { message = "Correo electrónico inválido", id = id, name = name, lastName = lastName, secondLastName = secondLastName, email = email, password = password, password2 = password2 });
+            }
+
+            if (string.Equals(password.Trim(), password2.Trim()))
+            {
+
+                if (password.Trim().Length < 8)
+                {
+                    return RedirectToAction("Drivers", "Admin", new { message = "La longitud de la contraseña debe ser mayor o igual 8", id = id, name = name, lastName = lastName, secondLastName = secondLastName, email = email, password = password, password2 = password2 });
+
+                }
+                else if (!IsValidPassword(password.Trim()))
+                {
+                    return RedirectToAction("Drivers", "Admin", new { message = "La contraseña debe contener números y letras", id = id, name = name, lastName = lastName, secondLastName = secondLastName, email = email, password = password, password2 = password2 });
+                }
+
+            }
+            else
+            {
+                return RedirectToAction("Drivers", "Admin", new { message = "Contraseñas no coinciden", id = id, name = name, lastName = lastName, secondLastName = secondLastName, email = email, password = password, password2 = password2 });
+            }
+
+            if (IsRegisteredID(id.Trim()))
+            {
+                return RedirectToAction("Drivers", "Admin", new { message = "Identificación ya se encuentra registrada", id = id, name = name, lastName = lastName, secondLastName = secondLastName, email = email, password = password, password2 = password2 });
             }
 
 
+            if (IsRegisteredEmail(email.Trim()))
+            {
+                return RedirectToAction("Drivers", "Admin", new { message = "Correo electrónico ya está registrado", id = id, name = name, lastName = lastName, secondLastName = secondLastName, email = email, password = password, password2 = password2 });
+            }
+
             var chofer = new CHOFER();
 
-            chofer.CHO_IDENTIFICACION= id;
+            chofer.CHO_IDENTIFICACION= id.Trim();
             chofer.CHO_FECHA_NACIMIENTO = dateOfBirth;
-            chofer.CHO_NOMBRE = name;
-            chofer.CHO_PRIMER_APELLIDO = lastName;
-            chofer.CHO_SEGUNDO_APELLIDO = secondLastName;
-            chofer.CHO_CORREO_ELECTRONICO = email;
-            chofer.CHO_CONTRASENNA = password;
+            chofer.CHO_NOMBRE = name.Trim();
+            chofer.CHO_PRIMER_APELLIDO = lastName.Trim();
+            chofer.CHO_SEGUNDO_APELLIDO = secondLastName.Trim();
+            chofer.CHO_CORREO_ELECTRONICO = email.Trim();
+            chofer.CHO_CONTRASENNA = password.Trim();
             chofer.CHO_ESTADO = true;
 
             SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
@@ -135,6 +191,42 @@ namespace SmartPayment.Controllers
 
             return RedirectToAction("Drivers", "Admin");
 
+        }
+
+        public static bool IsRegisteredEmail(string email)
+        {
+            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
+
+            var chofer = db.CHOFERs.FirstOrDefault(e => e.CHO_CORREO_ELECTRONICO == email);
+
+            return (chofer != null) ? true : false;
+
+        }
+
+        public static bool IsRegisteredID(string id)
+        {
+            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
+
+            var chofer = db.CHOFERs.FirstOrDefault(e => e.CHO_IDENTIFICACION == id);
+
+            return (chofer != null) ? true : false;
+
+        }
+
+        public static bool IsValidEmailAddress(string emailAddress)
+        {
+            string pattern = @"^[a-z][a-z|0-9|]*([_][a-z|0-9]+)*([.][a-z|0-9]+([_][a-z|0-9]+)*)?@[a-z][a-z|0-9|]*\.([a-z][a-z|0-9]*(\.[a-z][a-z|0-9]*)?)$";
+            Match match = Regex.Match(emailAddress.Trim(), pattern, RegexOptions.IgnoreCase);
+
+            return match.Success;
+        }
+
+        public static bool IsValidPassword(string password)
+        {
+            string pattern = @"^[a-zA-Z][a-zA-Z0-9]*$";
+            Match match = Regex.Match(password.Trim(), pattern, RegexOptions.IgnoreCase);
+
+            return match.Success;
         }
     }
 }
