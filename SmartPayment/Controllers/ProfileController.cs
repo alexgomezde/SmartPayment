@@ -44,16 +44,20 @@ namespace SmartPayment.Controllers
         }
 
 
-        public ActionResult UpdateCoinPurse(decimal ammount) 
+        public ActionResult UpdateCoinPurse(string ammount) 
         {
+            if(string.IsNullOrEmpty(ammount))
+            {
+                return RedirectToAction("Index", "Profile", new { message = "Campos en blanco" });
+            }
 
-            if(ammount > 0 )
+            if(Decimal.Parse(ammount) > 0 )
             {
                 SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
 
                 client = db.CLIENTEs.FirstOrDefault(x => x.CLI_CORREO_ELECTRONICO == System.Web.HttpContext.Current.User.Identity.Name);
 
-                client.CLI_MONEDERO += ammount;
+                client.CLI_MONEDERO += Decimal.Parse(ammount);
 
                 db.Entry(client).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();

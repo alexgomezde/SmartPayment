@@ -32,7 +32,16 @@
                 @{
                     if (!string.IsNullOrEmpty(ViewBag.Message))
                     {
-                        <div class="alert alert-danger mt-5 text-center"> @ViewBag.Message </div>
+                        if (string.Equals(ViewBag.Message, "Cuenta creada correctamente"))
+                        {
+                            <div class="alert alert-success mt-5 text-center"> @ViewBag.Message </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger mt-5 text-center"> @ViewBag.Message </div>
+                        }
+
+
                     }
                 }
 

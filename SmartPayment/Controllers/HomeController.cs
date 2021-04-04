@@ -228,7 +228,7 @@ namespace SmartPayment.Controllers
                 db.Entry(client).State = System.Data.Entity.EntityState.Added;
                 db.SaveChanges();
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { message = "Cuenta creada correctamente" });
             }
             else
             {
