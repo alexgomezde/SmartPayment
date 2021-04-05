@@ -1,0 +1,74 @@
+﻿@model dynamic
+@{
+    ViewBag.Title = "Home Page";
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Realizar Pago</h2>
+
+            <form action="/Driver/MakePayment" method="post">
+
+                <div class="form-group">
+                    <label for="cedula">Cédula del Cliente</label>
+                    <select class="form-control col-md-12" id="cedula" name="cedula">
+                        <option value="">--Seleccione--</option>
+                        @foreach (var elemento in Model.Clientes)
+                        {
+
+                            if (elemento.State)
+                            {
+                                <option value="@elemento.Id">@elemento.Id - @elemento.Name @elemento.Lastname</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="ruta">Ruta</label>
+                    <select class="form-control col-md-12" id="ruta" name="ruta">
+                        <option value="">--Seleccione--</option>
+                        @foreach (var elemento in Model.Rutas)
+                        {
+                            if (elemento.State)
+                            {
+                                <option value="@elemento.Code">@elemento.Nombre - @elemento.Costo</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-info col-12 mt-5">Realizar Pago</button>
+                @{
+                    if (!string.IsNullOrEmpty(ViewBag.Message))
+                    {
+                        if (string.Equals(ViewBag.Message, "Pago Exitoso"))
+                        {
+                            <div class="alert alert-success mt-5 text-center"> @ViewBag.Message </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger mt-5 text-center"> @ViewBag.Message </div>
+                        }
+
+
+                    }
+                }
+
+            </form>
+
+
+        </div>
+    </div>
+</body>
+</html>

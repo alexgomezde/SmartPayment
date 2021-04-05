@@ -71,6 +71,32 @@ namespace SmartPayment.Controllers
 
         }
 
+        public ActionResult Routes(string message = "", string provincia = "", string canton = "", string nombre = "", decimal costo = 0)
+        {
+            ViewData["provincia"] = provincia;
+            ViewData["canton"] = canton;
+            ViewData["nombre"] = nombre;
+            ViewData["costo"] = costo;
+            ViewBag.Message = message;
+            List<RoutesTableViewModel> lst;
+            using (SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities())
+            {
+                lst = (from d in db.RUTAs
+                       select new RoutesTableViewModel
+                       {
+                           Code = d.RUT_CODIGO_CTP,
+                           Provincia = d.RUT_PROVINCIA,
+                           Canton = d.RUT_CANTON,
+                           Nombre = d.RUT_NOMBRE,
+                           Costo = d.RUT_COSTO,
+                           State = d.RUT_ESTADO
+                       }).ToList();
+
+            }
+            return View(lst);
+
+        }
+
         public ActionResult AddNewDriver(string id, DateTime dateOfBirth, string name, string lastName, string secondLastName, string email, string password, string password2)
         {
 
@@ -147,6 +173,48 @@ namespace SmartPayment.Controllers
       
         }
 
+        public ActionResult AddNewRoute(string provincia, string canton, string nombre, decimal costo)
+        {
+
+            if (string.IsNullOrEmpty(provincia) || string.IsNullOrEmpty(canton) || string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(costo.ToString()))
+            {
+
+                return RedirectToAction("Routes", "Admin", new { message = "Campos vacíos", provincia = provincia, canton = canton, nombre = nombre, costo = costo });
+            }
+
+
+            if(costo < 1)
+            {
+                return RedirectToAction("Routes", "Admin", new { message = "Costo debe ser mayor a 0", provincia = provincia, canton = canton, nombre = nombre, costo = costo });
+
+            }
+
+
+            if (IsRegisteredName(nombre.Trim()))
+            {
+                return RedirectToAction("Routes", "Admin", new { message = "Nombre de la ruta ya existe", provincia = provincia, canton = canton, nombre = nombre, costo = costo });
+            }
+
+
+            var ruta = new RUTA();
+
+            ruta.RUT_PROVINCIA = provincia.Trim();
+            ruta.RUT_CANTON = canton.Trim();
+            ruta.RUT_NOMBRE = nombre.Trim();
+            ruta.RUT_COSTO = costo;
+            ruta.RUT_ESTADO = true;
+
+            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
+
+            db.Entry(ruta).State = System.Data.Entity.EntityState.Added;
+            db.SaveChanges();
+
+            return RedirectToAction("Routes", "Admin");
+
+
+        }
+
+
         public ActionResult DisableClient(string id)
         {
 
@@ -193,6 +261,30 @@ namespace SmartPayment.Controllers
 
         }
 
+        public ActionResult DisableRoute(int id)
+        {
+
+            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
+
+            var route = db.RUTAs.FirstOrDefault(x => x.RUT_CODIGO_CTP == id);
+
+
+            if (route.RUT_ESTADO == true)
+            {
+                route.RUT_ESTADO = false;
+            }
+            else
+            {
+                route.RUT_ESTADO = true;
+            }
+
+            db.Entry(route).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("Routes", "Admin");
+
+        }
+
         public static bool IsRegisteredEmail(string email)
         {
             SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
@@ -210,6 +302,16 @@ namespace SmartPayment.Controllers
             var chofer = db.CHOFERs.FirstOrDefault(e => e.CHO_IDENTIFICACION == id);
 
             return (chofer != null) ? true : false;
+
+        }
+
+        public static bool IsRegisteredName(string nombre)
+        {
+            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
+
+            var ruta = db.RUTAs.FirstOrDefault(e => e.RUT_NOMBRE == nombre);
+
+            return (ruta != null) ? true : false;
 
         }
 

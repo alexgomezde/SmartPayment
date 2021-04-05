@@ -1,0 +1,112 @@
+﻿@model List<SmartPayment.Models.ViewModels.RoutesTableViewModel>
+@{
+    ViewBag.Title = "Rutas";
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Rutas</title>
+</head>
+<body>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <a href="/Admin/Drivers" class="btn btn-outline-info col-md-12 btn-lg">CHOFERES</a>
+        </div>
+        <div class="col-md-4">
+            <a href="/Admin/Clients" class="btn btn-outline-info col-md-12 btn-lg">CLIENTES</a>
+        </div>
+        <div class="col-md-4">
+            <a href="/Admin/Routes" class="btn btn-info col-md-12 btn-lg">RUTAS</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <table class="table  table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr class="text-center">
+                        <th>Código</th>
+                        <th>Provincia</th>
+                        <th>Cantón</th>
+                        <th>Nombre</th>
+                        <th>Costo</th>
+                        <th>Estado</th>
+                        <th>Editar</th>
+                        <th>Habilitar / Deshabilitar</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var elemento in Model)
+                    {
+                        <tr class="text-center">
+                            <td>@elemento.Code</td>
+                            <td>@elemento.Provincia</td>
+                            <td>@elemento.Canton</td>
+                            <td>@elemento.Nombre</td>
+                            <td>@elemento.Costo</td>
+                            <td>@(elemento.State ? "Activo" : "Desactivado")</td>
+                            <td><a href=""><img src="~/Content/Images/draw.svg" /></a></td>
+                            <td><a href="@Url.Action("DisableRoute","Admin", new { id = @elemento.Code })"><img src="~/Content/Images/disabled.svg" /></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <button class="btn btn-info float-right" data-toggle="modal" data-target="#addRouteModal">Agregar Ruta</button>
+
+            @{
+                if (!string.IsNullOrEmpty(ViewBag.Message))
+                {
+                    <div class="alert alert-danger mt-2 text-center col-6"> @ViewBag.Message </div>
+                }
+            }
+
+            <div class="modal fade" id="addRouteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info">
+                            <h5 class="modal-title text-white" id="exampleModalLabel">Agregar Ruta</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/Admin/AddNewRoute" method="post">
+
+                                <div class="form-group">
+                                    <label for="inputProvincia">Provincia</label>
+                                    <input type="text" class="form-control col-12 form-control-sm" id="inputProvincia" name="provincia" value="@ViewData["provincia"]">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputCanton">Cantón</label>
+                                    <input type="text" class="form-control col-12 form-control-sm" id="inputCanton" name="canton" value="@ViewData["canton"]">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputNombre">Nombre</label>
+                                    <input type="text" class="form-control col-12 form-control-sm" id="inputNombre" name="nombre" value="@ViewData["nombre"]">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputCosto">Costo</label>
+                                    <input type="number" class="form-control col-12 form-control-sm" id="inputCosto" name="costo" value="@ViewData["costo"]">
+                                </div>
+
+
+                                <button type="submit" class="btn btn-info col-12 mt-5">Agregar Nueva Ruta</button>
+                                <label id="lblErrorMessage" class="mt-2 text-danger"></label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

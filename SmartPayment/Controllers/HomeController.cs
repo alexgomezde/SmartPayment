@@ -73,7 +73,7 @@ namespace SmartPayment.Controllers
                     if (driver.CHO_ESTADO == true)
                     {
                         FormsAuthentication.SetAuthCookie(driver.CHO_CORREO_ELECTRONICO, true);
-                        return RedirectToAction("Index", "Admin");
+                        return RedirectToAction("Index", "Driver", new { email = driver.CHO_CORREO_ELECTRONICO });
                     }
                     else
                     {
