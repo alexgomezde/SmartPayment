@@ -61,7 +61,16 @@
             @{
                 if (!string.IsNullOrEmpty(ViewBag.Message))
                 {
-                    <div class="alert alert-danger mt-2 text-center col-6"> @ViewBag.Message </div>
+                    if (string.Equals(ViewBag.Message, "Ruta agregada correctamente"))
+                    {
+                        <div class="alert alert-success mt-2 text-center col-6"> @ViewBag.Message </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger mt-2 text-center col-6"> @ViewBag.Message </div>
+                    }
+
+
                 }
             }
 

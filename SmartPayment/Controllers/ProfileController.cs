@@ -1,6 +1,8 @@
 ﻿using SmartPayment.Models;
+using SmartPayment.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -19,6 +21,15 @@ namespace SmartPayment.Controllers
             GetUsername();
             return View();
         }
+
+        public ActionResult Reports(string message = "")
+        {
+            dynamic mymodel = new ExpandoObject();
+            mymodel.Reportes = GetReports();
+            ViewBag.Message = message;
+            return View(mymodel);
+        }
+
 
         public ActionResult GetUsername()
         {
@@ -72,8 +83,75 @@ namespace SmartPayment.Controllers
                 return RedirectToAction("Index", "Profile", new { message = "Debe ingresar un monto mayor a 0" });
             }
             
+        }
+
+        public List<ReportsClientTableVM> GetReports()
+        {
+            SMART_PAYMENT_DBEntities db = new SMART_PAYMENT_DBEntities();
+            client = db.CLIENTEs.FirstOrDefault(x => x.CLI_CORREO_ELECTRONICO == System.Web.HttpContext.Current.User.Identity.Name);
 
             
+
+            List<PaymentsTableViewModel> lstPayment;
+
+            lstPayment = (from d in db.PAGOes
+                        select new PaymentsTableViewModel
+                        {
+                            Id = d.PAG_ID,
+                            Id_Client = d.PAG_IDENTIFICACION_CLIENTE,
+                            Id_Driver = d.PAG_IDENTIFICACION_CHOFER,
+                            Id_Route = d.PAG_CODIGO_CTP_RUTA,
+                            DateOfPayment = d.PAG_FECHA,
+                            State = d.RECHAZADO
+                        }).ToList();
+
+            List<RoutesTableViewModel> lstRoutes;
+
+            lstRoutes = (from d in db.RUTAs
+                   select new RoutesTableViewModel
+                   {
+                       Code = d.RUT_CODIGO_CTP,
+                       Provincia = d.RUT_PROVINCIA,
+                       Canton = d.RUT_CANTON,
+                       Nombre = d.RUT_NOMBRE,
+                       Costo = d.RUT_COSTO,
+                       State = d.RUT_ESTADO
+                   }).ToList();
+
+
+
+            List<PaymentsTableViewModel> filteredListPayment = new List<PaymentsTableViewModel>();
+            List<ReportsClientTableVM> filteredReports = new List<ReportsClientTableVM>();
+
+            
+
+            foreach ( var payment in lstPayment)
+            {
+                
+                if (client.CLI_IDENTIFICACION.Equals(payment.Id_Client))
+                {
+                    ReportsClientTableVM newEntryReport = new ReportsClientTableVM();
+
+                    foreach( var route in lstRoutes)
+                    {
+                        if(payment.Id_Route == route.Code)
+                        {
+                            newEntryReport.Id = payment.Id;
+                            newEntryReport.Nombre = route.Nombre;
+                            newEntryReport.Costo = route.Costo;
+                            newEntryReport.DateOfPayment = payment.DateOfPayment;
+                            newEntryReport.State = payment.State;
+
+                            filteredReports.Add(newEntryReport);
+                        }
+                    }
+
+                    
+                }
+            }
+
+            return filteredReports;
+
         }
     }
 }

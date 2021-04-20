@@ -168,7 +168,7 @@ namespace SmartPayment.Controllers
             db.Entry(chofer).State = System.Data.Entity.EntityState.Added;
             db.SaveChanges();
 
-           return RedirectToAction("Drivers", "Admin");
+           return RedirectToAction("Drivers", "Admin", new { message = "Chofer agregado correctamente" });
 
       
         }
@@ -209,7 +209,7 @@ namespace SmartPayment.Controllers
             db.Entry(ruta).State = System.Data.Entity.EntityState.Added;
             db.SaveChanges();
 
-            return RedirectToAction("Routes", "Admin");
+            return RedirectToAction("Routes", "Admin", new { message = "Ruta agregada correctamente" });
 
 
         }

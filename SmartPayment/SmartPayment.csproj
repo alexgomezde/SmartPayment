@@ -167,6 +167,8 @@
     </Compile>
     <Compile Include="Models\ViewModels\ClientsTableViewModel.cs" />
     <Compile Include="Models\ViewModels\DriversTableViewModel.cs" />
+    <Compile Include="Models\ViewModels\PaymentsTableViewModel.cs" />
+    <Compile Include="Models\ViewModels\ReportsClientTableVM.cs" />
     <Compile Include="Models\ViewModels\RoutesTableViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -330,6 +332,7 @@
     <Content Include="Views\Admin\Clients.cshtml" />
     <Content Include="Views\Admin\Routes.cshtml" />
     <Content Include="Views\Driver\Index.cshtml" />
+    <Content Include="Views\Profile\Reports.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
