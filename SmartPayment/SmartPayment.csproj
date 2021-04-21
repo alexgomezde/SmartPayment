@@ -333,6 +333,7 @@
     <Content Include="Views\Admin\Routes.cshtml" />
     <Content Include="Views\Driver\Index.cshtml" />
     <Content Include="Views\Profile\Reports.cshtml" />
+    <Content Include="Views\Driver\Reports.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
